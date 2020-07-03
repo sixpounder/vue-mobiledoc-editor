@@ -14,7 +14,7 @@
     "bump": "npm --no-git-tag-version version patch && npm run build && npm publish"
   },
   "dependencies": {
-    "mobiledoc-kit": "0.10.15",
+    "mobiledoc-kit": "^0.13.1",
     "vue": "^2.3.4"
   },
   "devDependencies": {
