@@ -2,7 +2,7 @@ var path = require('path')
 var webpack = require('webpack')
 var merge = require('webpack-merge')
 var HtmlWebpackPlugin = require('html-webpack-plugin')
-var ExtractTextPlugin = require("extract-text-webpack-plugin")
+// var ExtractTextPlugin = require("extract-text-webpack-plugin")
 
 var projectRoot = path.resolve(__dirname, './')
 var devRoot = path.resolve(__dirname, './demo')
@@ -20,7 +20,7 @@ const baseConfig = {
     },
     modules: [
       prodRoot,
-      "node_modules"
+      'node_modules'
     ]
   },
   module: {
@@ -43,7 +43,7 @@ const baseConfig = {
           'eslint-loader'
         ],
         exclude: /node_modules/,
-        include: projectRoot,
+        include: projectRoot
       },
       {
         test: /\.(png|jpg|gif|svg)$/,
@@ -57,31 +57,31 @@ const baseConfig = {
 }
 
 const devConfig = {
-    entry: `${devRoot}/main.js`,
-    output: {
-      publicPath: '/'
-    },
-    devtool: '#eval-source-map',
-    devServer: {
-      // contentBase: __dirname + "/src",
-      historyApiFallback: true,
-      noInfo: true
-    },
-    performance: { hints: false },
-    plugins: [
-      new webpack.DefinePlugin({
-        'process.env': {
-          NODE_ENV: '"development"'
-        }
-      }),
-      new webpack.optimize.OccurrenceOrderPlugin(),
-      new webpack.HotModuleReplacementPlugin(),
-      new webpack.NoErrorsPlugin(),
-      new HtmlWebpackPlugin({
-        template: `${devRoot}/index.html`,
-        inject: true
-      })
-    ]
+  entry: `${devRoot}/main.js`,
+  output: {
+    publicPath: '/'
+  },
+  devtool: '#eval-source-map',
+  devServer: {
+    // contentBase: __dirname + "/src",
+    historyApiFallback: true,
+    noInfo: true
+  },
+  performance: { hints: false },
+  plugins: [
+    new webpack.DefinePlugin({
+      'process.env': {
+        NODE_ENV: '"development"'
+      }
+    }),
+    new webpack.optimize.OccurrenceOrderPlugin(),
+    new webpack.HotModuleReplacementPlugin(),
+    new webpack.NoErrorsPlugin(),
+    new HtmlWebpackPlugin({
+      template: `${devRoot}/index.html`,
+      inject: true
+    })
+  ]
 }
 
 const prodConfig = {
@@ -103,12 +103,12 @@ const prodConfig = {
         NODE_ENV: '"production"'
       }
     }),
-    new webpack.optimize.UglifyJsPlugin({
-      sourceMap: true,
-      compress: {
-        warnings: false
-      }
-    }),
+    // new webpack.optimize.UglifyJsPlugin({
+    //   sourceMap: true,
+    //   compress: {
+    //     warnings: false
+    //   }
+    // }),
     new webpack.LoaderOptionsPlugin({
       minimize: true
     })
@@ -128,17 +128,14 @@ var finalConfig
 
 if (process.env.NODE_ENV === 'development') {
   finalConfig = merge(baseConfig, devConfig)
-}
-else if (process.env.NODE_ENV === 'production') {
+} else if (process.env.NODE_ENV === 'production') {
   finalConfig = merge(baseConfig, prodConfig)
-}
-else if (process.env.NODE_ENV === 'testing') {
+} else if (process.env.NODE_ENV === 'testing') {
   finalConfig = merge(baseConfig, testConfig)
   // no need for original entry during tests
   delete finalConfig.entry
-}
-else {
-  throw 'Node environment does not exist'
+} else {
+  throw Object({ message: 'Node environment does not exist' })
 }
 
 module.exports = finalConfig

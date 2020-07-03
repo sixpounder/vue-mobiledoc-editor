@@ -1,15 +1,14 @@
 <template>
-<div id='mobiledoc-editor_container'>
-  <slot name="header" />
-  <slot></slot>
-  <div id='mobiledoc-editor_editor' ref='editorPost' />
-  <slot name="footer" />
-</div>
+  <div id="mobiledoc-editor_container">
+    <slot name="header" />
+    <slot></slot>
+    <div id="mobiledoc-editor_editor" ref="editorPost" />
+    <slot name="footer" />
+  </div>
 </template>
 
 <script>
-import Mobiledoc, { UI } from 'mobiledoc-kit'
-import { EMPTY_MOBILEDOC } from './helpers/mobiledocFormats'
+import { Editor, UI } from 'mobiledoc-kit'
 
 export default {
   provide () {
@@ -19,7 +18,7 @@ export default {
   },
 
   props: {
-    mobiledoc: { type: Object, default: () => EMPTY_MOBILEDOC },
+    mobiledoc: { type: Object, default: () => {} },
     atoms: { type: Array, default: () => [] },
     cards: { type: Array, default: () => [] },
     placeholder: { type: String, default: () => '' },
@@ -55,16 +54,16 @@ export default {
 
     editorVm () {
       return {
-       editor: () => this.editor,
-       canEdit: () => this.canEdit,
-       activeMarkupTags: this.activeMarkupTags,
-       activeSectionTags: this.activeSectionTags,
-       toggleMarkup: this.toggleMarkup,
-       toggleSection: this.toggleSection,
-       toggleLink: this.toggleLink,
-       toggleEditMode: this.toggleEditMode,
-       addAtom: this.addAtom,
-       addCard: this.addCard
+        editor: () => this.editor,
+        canEdit: () => this.canEdit,
+        activeMarkupTags: this.activeMarkupTags,
+        activeSectionTags: this.activeSectionTags,
+        toggleMarkup: this.toggleMarkup,
+        toggleSection: this.toggleSection,
+        toggleLink: this.toggleLink,
+        toggleEditMode: this.toggleEditMode,
+        addAtom: this.addAtom,
+        addCard: this.addCard
       }
     },
 
@@ -100,8 +99,10 @@ export default {
     },
 
     toggleLink (tag = 'a') {
-      if (!this.editor.hasCursor()) return // no cursor selected
-      else if (this.editor.hasActiveMarkup(tag)) this.editor.toggleMarkup(tag) // deselect
+      if (!this.editor.hasCursor()) return
+      // no cursor selected
+      else if (this.editor.hasActiveMarkup(tag)) this.editor.toggleMarkup(tag)
+      // deselect
       else UI.toggleLink(this.editor)
     },
 
@@ -120,7 +121,7 @@ export default {
     _initEditorWithEventEmitters () {
       this.$emit('willCreateEditor')
 
-      this.editor = new Mobiledoc.Editor(this.editorOptions)
+      this.editor = new Editor(this.editorOptions)
 
       if (this.enableEditing === false) this.toggleEditMode()
 
@@ -143,16 +144,15 @@ export default {
       this.editor.render(this.$refs.editorPost)
     },
 
-
     _updateActiveMarkupTags () {
-      this.activeMarkupTags = this.editor.activeMarkups.map(m => m.tagName)
+      this.activeMarkupTags = this.editor.activeMarkups.map((m) => m.tagName)
     },
 
     _updateActiveSectionTags () {
       // editor.activeSections are leaf sections.
       // map parent section tag names (e.g. 'p', 'ul') so that
       // list buttons are updated
-      this.activeSectionTags = this.editor.activeSections.map(s => {
+      this.activeSectionTags = this.editor.activeSections.map((s) => {
         return s.isNested ? s.parent.tagName : s.tagName
       })
     }
